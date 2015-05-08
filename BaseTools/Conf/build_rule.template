@@ -278,7 +278,6 @@
 
     <Command.GCC>
         "$(DLINK)" -o ${dst} $(DLINK_FLAGS) --start-group $(DLINK_SPATH) @$(STATIC_LIBRARY_FILES_LIST) --end-group $(DLINK2_FLAGS)
-        "$(OBJCOPY)" $(OBJCOPY_FLAGS) ${dst}
 
     <Command.ARMGCC, Command.ARMLINUXGCC>
         "$(DLINK)" -o ${dst} $(DLINK_FLAGS) --start-group $(DLINK_SPATH) $(STATIC_LIBRARY_FILES) --end-group $(DLINK2_FLAGS)
@@ -339,7 +338,6 @@
         -$(CP) $(DEBUG_DIR)(+)*.pdb $(OUTPUT_DIR) 
     <Command.GCC>
         $(CP) ${src} $(DEBUG_DIR)(+)$(MODULE_NAME).debug
-        $(OBJCOPY) --strip-unneeded -R .eh_frame ${src}
 
         #
         #The below 2 lines are only needed for UNIXGCC tool chain, which genereates PE image directly
