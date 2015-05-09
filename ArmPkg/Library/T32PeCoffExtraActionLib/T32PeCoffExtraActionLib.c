@@ -38,7 +38,7 @@ PeCoffLoaderRelocateImageExtraAction (
   IN OUT PE_COFF_LOADER_IMAGE_CONTEXT  *ImageContext
   )
 {
-  DEBUG ((EFI_D_ERROR, "data.load.elf %a a:0x%08x /NOCODE /NOCLEAR\n", ImageContext->PdbPointer, (UINTN)(ImageContext->ImageAddress + ImageContext->SizeOfHeaders)));
+  DEBUG ((EFI_D_ERROR, "data.load.elf %a a:0x%08p /NOCODE /NOCLEAR\n", ImageContext->PdbPointer, (UINTN)(ImageContext->ImageAddress + ImageContext->SizeOfHeaders)));
 }
 
 
