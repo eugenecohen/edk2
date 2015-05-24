@@ -44,41 +44,7 @@ EFI_PHYSICAL_ADDRESS  mSmmMemLibInternalMaximumSupportAddress = 0;
 VOID
 SmmMemLibInternalCalculateMaximumSupportAddress (
   VOID
-  )
-{
-  VOID         *Hob;
-  UINT32       RegEax;
-  UINT8        PhysicalAddressBits;
-
-  //
-  // Get physical address bits supported.
-  //
-  Hob = GetFirstHob (EFI_HOB_TYPE_CPU);
-  if (Hob != NULL) {
-    PhysicalAddressBits = ((EFI_HOB_CPU *) Hob)->SizeOfMemorySpace;
-  } else {
-    AsmCpuid (0x80000000, &RegEax, NULL, NULL, NULL);
-    if (RegEax >= 0x80000008) {
-      AsmCpuid (0x80000008, &RegEax, NULL, NULL, NULL);
-      PhysicalAddressBits = (UINT8) RegEax;
-    } else {
-      PhysicalAddressBits = 36;
-    }
-  }
-  //
-  // IA-32e paging translates 48-bit linear addresses to 52-bit physical addresses.
-  //
-  ASSERT (PhysicalAddressBits <= 52);
-  if (PhysicalAddressBits > 48) {
-    PhysicalAddressBits = 48;
-  }
-  
-  //
-  // Save the maximum support address in one global variable  
-  //
-  mSmmMemLibInternalMaximumSupportAddress = (EFI_PHYSICAL_ADDRESS)(UINTN)(LShiftU64 (1, PhysicalAddressBits) - 1);
-  DEBUG ((EFI_D_INFO, "mSmmMemLibInternalMaximumSupportAddress = 0x%lx\n", mSmmMemLibInternalMaximumSupportAddress));
-}
+  );
 
 /**
   This function check if the buffer is valid per processor architecture and not overlap with SMRAM.
