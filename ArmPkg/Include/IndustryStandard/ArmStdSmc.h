@@ -16,6 +16,12 @@
 #define __ARM_STD_SMC_H__
 
 /*
+* SMC function IDs for ARM Architecture calls.
+*/
+#define ARM_SMC_ID_ARM_RUN_IMAGE_AARCH64       0xC0000000
+#define ARM_SMC_ID_ARM_RUN_IMAGE_AARCH32       0x80000000
+
+/*
  * SMC function IDs for Standard Service queries
  */
 
@@ -57,6 +63,13 @@
 #define ARM_SMC_ID_PSCI_MIGRATE_AARCH32        0x84000005
 #define ARM_SMC_ID_PSCI_SYSTEM_OFF             0x84000008
 #define ARM_SMC_ID_PSCI_SYSTEM_RESET           0x84000009
+
+
+// BUG BUG BUG: This needs to be officially assigned - not sure how, I've asked ARM
+/*
+* Software SMI to call into the PI SMM runtime.
+*/
+#define ARM_SMC_ID_SW_SMI                      0x84000010
 
 /* The current PSCI version is:  0.2 */
 #define ARM_SMC_PSCI_VERSION_MAJOR  0
