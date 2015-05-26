@@ -174,3 +174,4 @@
 
 [Components.ARM, Components.AARCH64]
   MdePkg/Library/BaseStackCheckLib/BaseStackCheckLib.inf
+  MdePkg/Library/SmmMemLib/SmmMemLib.inf
