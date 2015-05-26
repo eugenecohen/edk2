@@ -30,6 +30,9 @@
 #include <Library/CpuLib.h>
 #include <Library/DefaultExceptionHandlerLib.h>
 #include <Library/DebugLib.h>
+#include <Library/ArmSmcLib.h>
+
+#include <IndustryStandard/ArmStdSmc.h>
 
 #include <Guid/DebugImageInfoTable.h>
 #include <Protocol/Cpu.h>
@@ -37,6 +40,8 @@
 #include <Protocol/DebugSupportPeriodicCallback.h>
 #include <Protocol/VirtualUncachedPages.h>
 #include <Protocol/LoadedImage.h>
+#include <Protocol/SmmControl2.h>
+#include <Protocol/SmmConfiguration.h>
 
 
 #define EFI_MEMORY_CACHETYPE_MASK     (EFI_MEMORY_UC  | \
@@ -178,5 +183,63 @@ SetGcdMemorySpaceAttributes (
   );
 
 extern VIRTUAL_UNCACHED_PAGES_PROTOCOL  gVirtualUncachedPages;
+
+EFI_STATUS
+InitializeSmc(VOID);
+
+/**
+Invokes SMI activation from either the preboot or runtime environment.
+
+This function generates an SMI.
+
+@param[in]     This                The EFI_SMM_CONTROL2_PROTOCOL instance.
+@param[in,out] CommandPort         The value written to the command port.
+@param[in,out] DataPort            The value written to the data port.
+@param[in]     Periodic            Optional mechanism to engender a periodic stream.
+@param[in]     ActivationInterval  Optional parameter to repeat at this period one
+time or, if the Periodic Boolean is set, periodically.
+
+@retval EFI_SUCCESS            The SMI/PMI has been engendered.
+@retval EFI_DEVICE_ERROR       The timing is unsupported.
+@retval EFI_INVALID_PARAMETER  The activation period is unsupported.
+@retval EFI_INVALID_PARAMETER  The last periodic activation has not been cleared.
+@retval EFI_NOT_STARTED        The SMM base service has not been initialized.
+**/
+EFI_STATUS
+EFIAPI
+SmmActivate(
+IN CONST EFI_SMM_CONTROL2_PROTOCOL  *This,
+IN OUT UINT8                        *CommandPort       OPTIONAL,
+IN OUT UINT8                        *DataPort          OPTIONAL,
+IN BOOLEAN                          Periodic           OPTIONAL,
+IN UINTN                            ActivationInterval OPTIONAL
+);
+
+/**
+Clears any system state that was created in response to the Trigger() call.
+
+This function acknowledges and causes the deassertion of the SMI activation source.
+
+@param[in] This                The EFI_SMM_CONTROL2_PROTOCOL instance.
+@param[in] Periodic            Optional parameter to repeat at this period one time
+
+@retval EFI_SUCCESS            The SMI/PMI has been engendered.
+@retval EFI_DEVICE_ERROR       The source could not be cleared.
+@retval EFI_INVALID_PARAMETER  The service did not support the Periodic input argument.
+**/
+EFI_STATUS
+EFIAPI
+SmmDeactivate(
+IN CONST EFI_SMM_CONTROL2_PROTOCOL  *This,
+IN BOOLEAN                          Periodic OPTIONAL
+);
+
+EFI_STATUS
+InitializeSecureControl(VOID);
+
+EFI_STATUS
+InitializeSecureConfig(VOID);
+
+EFI_STATUS StartSmmCore(VOID);
 
 #endif // __CPU_DXE_ARM_EXCEPTION_H__

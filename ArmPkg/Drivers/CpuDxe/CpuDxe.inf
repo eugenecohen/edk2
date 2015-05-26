@@ -29,6 +29,8 @@
   CpuDxe.h
   CpuMpCore.c
   CpuMmuCommon.c
+  SecureControl.c
+  SecureConfig.c
 
 #
 # Prior to ARMv6 we have multiple stacks, one per mode
@@ -69,11 +71,14 @@
   PeCoffGetEntryPointLib
   UefiDriverEntryPoint
   UefiLib
+  ArmSmcLib
 
 [Protocols]
   gEfiCpuArchProtocolGuid
   gEfiDebugSupportPeriodicCallbackProtocolGuid
   gVirtualUncachedPagesProtocolGuid
+  gEfiSmmControl2ProtocolGuid
+  gEfiSmmConfigurationProtocolGuid
 
 [Guids]
   gEfiDebugImageInfoTableGuid

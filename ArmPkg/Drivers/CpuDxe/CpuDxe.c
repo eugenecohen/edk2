@@ -276,5 +276,13 @@ CpuDxeInitialize (
                   );
   ASSERT_EFI_ERROR (Status);
 
+  // initialize SMC calling service (for SMM CONTROL2 service)
+  Status = InitializeSecureControl();
+  ASSERT_EFI_ERROR(Status);
+
+  // initialize SMM entry service (for SMM CONFIGURATION service)
+  Status = InitializeSecureConfig();
+  ASSERT_EFI_ERROR(Status);
+
   return Status;
 }
