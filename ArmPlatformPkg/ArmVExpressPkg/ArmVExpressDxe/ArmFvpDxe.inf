@@ -23,6 +23,7 @@
 [Sources.common]
   ArmFvpDxe.c
   ArmVExpressCommon.c
+  SecureMemory.c
 
 [Sources.ARM]
   Arm/ArmFvpDxeArm.c
@@ -57,6 +58,7 @@
 [Protocols]
   gEfiFirmwareVolume2ProtocolGuid
   gEfiDevicePathProtocolGuid
+  gEfiSmmAccess2ProtocolGuid
 
 [FixedPcd]
   gArmVExpressTokenSpaceGuid.PcdFvpFdtDevicePathsBase

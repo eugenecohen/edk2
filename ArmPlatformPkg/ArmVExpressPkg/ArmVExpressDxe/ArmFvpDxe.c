@@ -162,6 +162,12 @@ ArmFvpInitialise (
   VOID                         *Buffer;
   EFI_DEVICE_PATH              *FdtDevicePath;
 
+  // initialize secure memory for SMM init
+  Status = InitSecureMemoryAccess();
+  if (EFI_ERROR(Status)) {
+    return Status;
+  }
+
   Status = gBS->InstallProtocolInterface (&ImageHandle,
                  &gEfiDevicePathProtocolGuid, EFI_NATIVE_INTERFACE,
                  &mVirtioBlockDevicePath);

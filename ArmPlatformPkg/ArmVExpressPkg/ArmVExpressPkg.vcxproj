@@ -30,9 +30,11 @@
   </ImportGroup>
   <ImportGroup Label="PropertySheets" Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">
     <Import Project="$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props" Condition="exists('$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props')" Label="LocalAppDataPlatform" />
+    <Import Project="..\..\edk2.props" />
   </ImportGroup>
   <ImportGroup Label="PropertySheets" Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">
     <Import Project="$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props" Condition="exists('$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props')" Label="LocalAppDataPlatform" />
+    <Import Project="..\..\edk2.props" />
   </ImportGroup>
   <PropertyGroup Label="UserMacros" />
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">
@@ -49,6 +51,17 @@
   </ItemDefinitionGroup>
   <ItemGroup>
     <Text Include="readme.txt" />
+  </ItemGroup>
+  <ItemGroup>
+    <ClCompile Include="ArmVExpressDxe\AArch64\ArmFvpDxeAArch64.c" />
+    <ClCompile Include="ArmVExpressDxe\ArmFvpDxe.c" />
+    <ClCompile Include="ArmVExpressDxe\ArmHwDxe.c" />
+    <ClCompile Include="ArmVExpressDxe\ArmVExpressCommon.c" />
+    <ClCompile Include="ArmVExpressDxe\Arm\ArmFvpDxeArm.c" />
+    <ClCompile Include="ArmVExpressDxe\SecureMemory.c" />
+  </ItemGroup>
+  <ItemGroup>
+    <ClInclude Include="ArmVExpressDxe\ArmVExpressInternal.h" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">

@@ -17,4 +17,29 @@
   <ItemGroup>
     <Text Include="readme.txt" />
   </ItemGroup>
+  <ItemGroup>
+    <ClCompile Include="ArmVExpressDxe\AArch64\ArmFvpDxeAArch64.c">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="ArmVExpressDxe\Arm\ArmFvpDxeArm.c">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="ArmVExpressDxe\ArmFvpDxe.c">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="ArmVExpressDxe\ArmHwDxe.c">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="ArmVExpressDxe\ArmVExpressCommon.c">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="ArmVExpressDxe\SecureMemory.c">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+  </ItemGroup>
+  <ItemGroup>
+    <ClInclude Include="ArmVExpressDxe\ArmVExpressInternal.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+  </ItemGroup>
 </Project>

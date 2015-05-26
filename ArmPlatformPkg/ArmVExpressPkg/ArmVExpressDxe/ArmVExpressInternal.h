@@ -17,6 +17,9 @@
 
 #include <Uefi.h>
 
+#include <Pi/PiMultiPhase.h>
+#include <Protocol/SmmAccess2.h>
+
 #include <Library/ArmLib.h>
 #include <Library/DebugLib.h>
 #include <Library/IoLib.h>
@@ -95,5 +98,93 @@ EFI_STATUS
 ArmVExpressGetPlatform (
   OUT CONST ARM_VEXPRESS_PLATFORM** Platform
   );
+
+
+/**
+Initialize secure memory access services.  The primary purpose for this
+is to describe the secure memory ranges to the SMM IPL component.
+
+  @retval EFI_SUCCESS       The operation was successful.
+  @retval EFI_UNSUPPORTED   The system does not support secure memory.
+  @retval EFI_DEVICE_ERROR  Secure memory services cannot be initialized.
+
+**/
+EFI_STATUS
+EFIAPI
+InitSecureMemoryAccess(VOID);
+
+/**
+Opens the SMRAM area to be accessible by a boot-service driver.
+
+This function "opens" SMRAM so that it is visible while not inside of SMM. The function should
+return EFI_UNSUPPORTED if the hardware does not support hiding of SMRAM. The function
+should return EFI_DEVICE_ERROR if the SMRAM configuration is locked.
+
+@param[in] This           The EFI_SMM_ACCESS2_PROTOCOL instance.
+
+@retval EFI_SUCCESS       The operation was successful.
+@retval EFI_UNSUPPORTED   The system does not support opening and closing of SMRAM.
+@retval EFI_DEVICE_ERROR  SMRAM cannot be opened, perhaps because it is locked.
+**/
+EFI_STATUS
+EFIAPI
+SecureMemoryOpen(
+  IN EFI_SMM_ACCESS2_PROTOCOL  *This
+  );
+
+/**
+Inhibits access to the SMRAM.
+
+This function "closes" SMRAM so that it is not visible while outside of SMM. The function should
+return EFI_UNSUPPORTED if the hardware does not support hiding of SMRAM.
+
+@param[in] This           The EFI_SMM_ACCESS2_PROTOCOL instance.
+
+@retval EFI_SUCCESS       The operation was successful.
+@retval EFI_UNSUPPORTED   The system does not support opening and closing of SMRAM.
+@retval EFI_DEVICE_ERROR  SMRAM cannot be closed.
+**/
+EFI_STATUS
+EFIAPI
+SecureMemoryClose(
+  IN EFI_SMM_ACCESS2_PROTOCOL  *This
+  );
+
+/**
+Inhibits access to the SMRAM.
+
+This function prohibits access to the SMRAM region.  This function is usually implemented such
+that it is a write-once operation.
+
+@param[in] This          The EFI_SMM_ACCESS2_PROTOCOL instance.
+
+@retval EFI_SUCCESS      The device was successfully locked.
+@retval EFI_UNSUPPORTED  The system does not support locking of SMRAM.
+**/
+EFI_STATUS
+EFIAPI
+SecureMemoryLock(
+  IN EFI_SMM_ACCESS2_PROTOCOL  *This
+  );
+
+/**
+Queries the memory controller for the possible regions that will support SMRAM.
+
+@param[in]     This           The EFI_SMM_ACCESS2_PROTOCOL instance.
+@param[in,out] SmramMapSize   A pointer to the size, in bytes, of the SmramMemoryMap buffer.
+@param[in,out] SmramMap       A pointer to the buffer in which firmware places the current memory map.
+
+@retval EFI_SUCCESS           The chipset supported the given resource.
+@retval EFI_BUFFER_TOO_SMALL  The SmramMap parameter was too small.  The current buffer size
+needed to hold the memory map is returned in SmramMapSize.
+**/
+EFI_STATUS
+EFIAPI
+SecureMemoryGetCapabilities(
+IN CONST EFI_SMM_ACCESS2_PROTOCOL  *This,
+  IN OUT UINTN                       *SmramMapSize,
+  IN OUT EFI_SMRAM_DESCRIPTOR        *SmramMap
+  );
+
 
 #endif // __ARM_VEXPRESS_INTERNAL_H__

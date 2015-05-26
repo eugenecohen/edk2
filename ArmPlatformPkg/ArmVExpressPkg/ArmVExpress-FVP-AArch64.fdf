@@ -146,6 +146,13 @@ READ_LOCK_STATUS   = TRUE
   INF EmbeddedPkg/MetronomeDxe/MetronomeDxe.inf
 
   INF MdeModulePkg/Universal/HiiDatabaseDxe/HiiDatabaseDxe.inf
+  
+  #
+  # SMM
+  #
+  INF MdeModulePkg/Core/PiSmmCore/PiSmmIpl.inf
+  INF MdeModulePkg/Core/PiSmmCore/PiSmmCore.inf
+  INF MdeModulePkg/Universal/ReportStatusCodeRouter/Smm/ReportStatusCodeRouterSmm.inf
 
   #
   # Multiple Console IO support
@@ -375,6 +382,39 @@ READ_LOCK_STATUS   = TRUE
 [Rule.Common.UEFI_APPLICATION.BINARY]
   FILE APPLICATION = $(NAMED_GUID) {
     PE32      PE32                    |.efi
+    UI        STRING="$(MODULE_NAME)" Optional
+    VERSION   STRING="$(INF_VERSION)" Optional BUILD_NUM=$(BUILD_NUMBER)
+  }
+
+[Rule.Common.DXE_SMM_DRIVER]
+  FILE SMM = $(NAMED_GUID) {
+    DXE_DEPEX DXE_DEPEX Optional       $(INF_OUTPUT)/$(MODULE_NAME).depex
+    PE32      PE32                     $(INF_OUTPUT)/$(MODULE_NAME).efi
+    UI        STRING="$(MODULE_NAME)" Optional
+    VERSION   STRING="$(INF_VERSION)" Optional BUILD_NUM=$(BUILD_NUMBER)
+  }
+
+[Rule.Common.DXE_SMM_DRIVER.BINARY]
+  FILE SMM = $(NAMED_GUID) {
+    SMM_DEPEX SMM_DEPEX                |.depex
+    PE32      PE32                     |.efi
+    RAW       BIN  Optional            |.aml
+    UI        STRING="$(MODULE_NAME)" Optional
+    VERSION   STRING="$(INF_VERSION)" Optional BUILD_NUM=$(BUILD_NUMBER)
+  }
+
+[Rule.Common.SMM_CORE]
+  FILE SMM_CORE = $(NAMED_GUID) {
+    DXE_DEPEX DXE_DEPEX Optional       $(INF_OUTPUT)/$(MODULE_NAME).depex
+    PE32      PE32                     $(INF_OUTPUT)/$(MODULE_NAME).efi
+    UI        STRING="$(MODULE_NAME)" Optional
+    VERSION   STRING="$(INF_VERSION)" Optional BUILD_NUM=$(BUILD_NUMBER)
+  }
+
+[Rule.Common.SMM_CORE.BINARY]
+  FILE SMM_CORE = $(NAMED_GUID) {
+    DXE_DEPEX DXE_DEPEX Optional       |.depex
+    PE32      PE32                     |.efi
     UI        STRING="$(MODULE_NAME)" Optional
     VERSION   STRING="$(INF_VERSION)" Optional BUILD_NUM=$(BUILD_NUMBER)
   }
