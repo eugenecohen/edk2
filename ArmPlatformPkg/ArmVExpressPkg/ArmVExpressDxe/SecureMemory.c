@@ -14,9 +14,15 @@
 
 #include "ArmVExpressInternal.h"
 
+#include <Pi/PiDxeCis.h>
 #include <Protocol/SmmAccess2.h>
 
 #include <Library/HobLib.h>
+#include <Library/DxeServicesTableLib.h>
+
+// todo: obtain this from a HOB or PCD
+#define SECURE_MEMORY_BASE    0x80000000 // FVP low dram
+#define SECURE_MEMORY_SIZE    0x02000000 // 32MB
 
 STATIC EFI_HANDLE               mSmmAccessHandle = NULL;
 STATIC EFI_SMM_ACCESS2_PROTOCOL mSmmAccess = {
@@ -37,6 +43,16 @@ STATIC EFI_SMM_ACCESS2_PROTOCOL mSmmAccess = {
 EFI_STATUS
 EFIAPI
 InitSecureMemoryAccess(VOID) {
+
+  EFI_STATUS  Status;
+
+  // add secure memory to GCD so SMM IPL can mess with cacheability for it
+  Status = gDS->AddMemorySpace(
+    EfiGcdMemoryTypeSystemMemory,
+    SECURE_MEMORY_BASE, SECURE_MEMORY_SIZE,
+    EFI_MEMORY_WB | EFI_MEMORY_RUNTIME
+    );
+  if (EFI_ERROR(Status)) return Status;
 
   return gBS->InstallMultipleProtocolInterfaces(
     &mSmmAccessHandle,
@@ -137,9 +153,9 @@ SecureMemoryGetCapabilities(
   if (SmramMap == NULL) return EFI_INVALID_PARAMETER;
 
   // todo: obtain this from a HOB
-  SmramMap[0].PhysicalStart = 0x80000000; // FVP low dram
+  SmramMap[0].PhysicalStart = SECURE_MEMORY_BASE;
   SmramMap[0].CpuStart = SmramMap[0].PhysicalStart;
-  SmramMap[0].PhysicalSize = 0x2000000; // 32MB
+  SmramMap[0].PhysicalSize = SECURE_MEMORY_SIZE;
   SmramMap[0].RegionState = EFI_SMRAM_OPEN;
 
   return EFI_SUCCESS;
