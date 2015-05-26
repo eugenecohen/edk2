@@ -22,7 +22,7 @@
   PI_SPECIFICATION_VERSION       = 0x0001000A
   ENTRY_POINT                    = SmmMain
 
-#  VALID_ARCHITECTURES           = IA32 X64
+#  VALID_ARCHITECTURES           = IA32 X64 AARCH64
 
 [Sources]
   PiSmmCore.c
