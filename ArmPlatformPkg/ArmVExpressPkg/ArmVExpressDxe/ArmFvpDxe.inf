@@ -16,7 +16,7 @@
   INF_VERSION                    = 0x00010006
   BASE_NAME                      = ArmFvpDxe
   FILE_GUID                      = 405b2307-6839-4d52-aeb9-bece64252800
-  MODULE_TYPE                    = UEFI_DRIVER
+  MODULE_TYPE                    = DXE_DRIVER
   VERSION_STRING                 = 1.0
   ENTRY_POINT                    = ArmFvpInitialise
 
@@ -80,3 +80,6 @@
 
 [Pcd]
   gEmbeddedTokenSpaceGuid.PcdFdtDevicePaths
+
+[Depex]
+  TRUE

@@ -1,0 +1,44 @@
+#/** @file
+#
+#  ARM EL3/SMM Exception Handler
+#
+#  Copyright (c) 2015 Hewlett Packard Company. All rights reserved.
+#
+#  This program and the accompanying materials
+#  are licensed and made available under the terms and conditions of the BSD License
+#  which accompanies this distribution.  The full text of the license may be found at
+#  http://opensource.org/licenses/bsd-license.php
+#
+#  THE PROGRAM IS DISTRIBUTED UNDER THE BSD LICENSE ON AN "AS IS" BASIS,
+#  WITHOUT WARRANTIES OR REPRESENTATIONS OF ANY KIND, EITHER EXPRESS OR IMPLIED.
+#
+#**/
+
+[Defines]
+  INF_VERSION                    = 0x00010005
+  BASE_NAME                      = ArmSmmException
+  FILE_GUID                      = 5A708C65-3F08-4B78-85FA-2D3E14468983
+  MODULE_TYPE                    = DXE_SMM_DRIVER
+  PI_SPECIFICATION_VERSION       = 0x0001000A
+  VERSION_STRING                 = 1.0
+
+[Sources.Common]
+  SmmException.c
+
+[Sources.AARCH64]
+  AArch64/SmmExceptionSupport.S
+
+[Packages]
+  ArmPkg/ArmPkg.dec
+  MdePkg/MdePkg.dec
+
+[LibraryClasses]
+  ArmLib
+  BaseMemoryLib
+  DebugLib
+  ArmExceptionLib
+
+# This module will be loaded by CPU DXE as part of SMM preparation so we don't want
+# the SMM dispatcher to touch it.
+[Depex]
+  FALSE

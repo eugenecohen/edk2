@@ -143,9 +143,15 @@ ArmPlatformGetVirtualMemoryMap (
   // Map sparse memory region if present
   if (HasSparseMemory) {
     VirtualMemoryTable[++Index].PhysicalBase = SparseMemoryBase;
-    VirtualMemoryTable[Index].VirtualBase    = SparseMemoryBase;
-    VirtualMemoryTable[Index].Length         = SparseMemorySize;
-    VirtualMemoryTable[Index].Attributes     = CacheAttributes;
+    VirtualMemoryTable[Index].VirtualBase = SparseMemoryBase;
+    VirtualMemoryTable[Index].Length = SparseMemorySize;
+    VirtualMemoryTable[Index].Attributes = CacheAttributes;
+
+    // also map trusted memory to enable loading of SMM
+    VirtualMemoryTable[++Index].PhysicalBase = 0x80000000;
+    VirtualMemoryTable[Index].VirtualBase = VirtualMemoryTable[Index].PhysicalBase;
+    VirtualMemoryTable[Index].Length = 0x80000000;
+    VirtualMemoryTable[Index].Attributes = CacheAttributes;
   }
 
   // End of Table

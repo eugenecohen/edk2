@@ -152,6 +152,7 @@ READ_LOCK_STATUS   = TRUE
   #
   INF MdeModulePkg/Core/PiSmmCore/PiSmmIpl.inf
   INF MdeModulePkg/Core/PiSmmCore/PiSmmCore.inf
+  INF ArmPkg/Drivers/SmmException/SmmException.inf
   INF MdeModulePkg/Universal/ReportStatusCodeRouter/Smm/ReportStatusCodeRouterSmm.inf
 
   #
