@@ -16,6 +16,11 @@
 #define __ARM_STD_SMC_H__
 
 /*
+* SMC unknown function return status
+*/
+#define ARM_SMC_UNKNOWN_FUNCTION_IDENTIFIER   0xFFFFFFFF
+
+/*
 * SMC function IDs for ARM Architecture calls.
 */
 #define ARM_SMC_ID_ARM_RUN_IMAGE_AARCH64       0xC0000000
@@ -65,12 +70,6 @@
 #define ARM_SMC_ID_PSCI_SYSTEM_RESET           0x84000009
 
 
-// BUG BUG BUG: This needs to be officially assigned - not sure how, I've asked ARM
-/*
-* Software SMI to call into the PI SMM runtime.
-*/
-#define ARM_SMC_ID_SW_SMI                      0x84000010
-
 /* The current PSCI version is:  0.2 */
 #define ARM_SMC_PSCI_VERSION_MAJOR  0
 #define ARM_SMC_PSCI_VERSION_MINOR  2
@@ -105,5 +104,11 @@
 #define ARM_SMC_ID_PSCI_AFFINITY_INFO_ON          0
 #define ARM_SMC_ID_PSCI_AFFINITY_INFO_OFF         1
 #define ARM_SMC_ID_PSCI_AFFINITY_INFO_ON_PENDING  2
+
+// BUG BUG BUG: This needs to be officially assigned - not sure how, I've asked ARM
+/*
+* Software SMI to call into the PI SMM runtime.
+*/
+#define ARM_SMC_ID_SW_SMI                      0x84000010
 
 #endif
