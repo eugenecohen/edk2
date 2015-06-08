@@ -27,6 +27,8 @@
 #include <Protocol/DebugSupport.h>
 #include <Protocol/LoadedImage.h>
 
+#include <Chipset/AArch64.h>
+
 EFI_DEBUG_IMAGE_INFO_TABLE_HEADER *gDebugImageTableHeader = NULL;
 
 STATIC CHAR8 *gExceptionTypeString[] = {
@@ -102,17 +104,41 @@ DescribeExceptionSyndrome (
   UINTN Ec;
   UINTN Iss;
 
-  Ec = Esr >> 26;
-  Iss = Esr & 0x00ffffff;
+  Ec = (Esr & ESR_EC_MASK) >> ESR_EC_SHIFT;
+  Iss = (Esr & ESR_ISS_MASK) >> ESR_ISS_SHIFT;
 
+  Message = "Unknown exception class";
   switch (Ec) {
-    case 0x15: Message = "SVC executed in AArch64"; break;
-    case 0x20:
-    case 0x21: DescribeInstructionOrDataAbort ("Instruction abort", Iss); return;
-    case 0x22: Message = "PC alignment fault"; break;
-    case 0x23: Message = "SP alignment fault"; break;
-    case 0x24:
-    case 0x25: DescribeInstructionOrDataAbort ("Data abort", Iss); return;
+    case ESR_EC_WFI_WFE: Message = "Trapped WFI or WFE execution"; break;
+    case ESR_EC_CP15_MCR_MRC: Message = "Trapped MCR or MRC access to CP15"; break;
+    case ESR_EC_CP15_MCRR_MRRC: Message = "Trapped MCRR or MRRC access to CP15"; break;
+    case ESR_EC_CP14_MCR_MRC: Message = "Trapped MCR or MRC access to CP14"; break;
+    case ESR_EC_CP14_LDC_STC: Message = "Trapped LDC or STC access to CP14"; break;
+    case ESR_EC_FP_SIMD_ACCESS: Message = "Trapped SIMD or FP access"; break;
+    case ESR_EC_CP10_MCR_MRC: Message = "Trapped MCR or MRC access to CP10"; break;
+    case ESR_EC_CP14_MRRC: Message = "Trapped MRRC access to CP14"; break;
+    case ESR_EC_ILLEGAL_EXECUTION_STATE: Message = "Illegal execution state"; break;
+    case ESR_EC_SVC_AARCH32: Message = "SVC executed in AArch32"; break;
+    case ESR_EC_HVC_AARCH32: Message = "HVC executed in AArch32"; break;
+    case ESR_EC_SMC_AARCH32: Message = "SMC executed in AArch32"; break;
+    case ESR_EC_SVC_AARCH64: Message = "SVC executed in AArch64"; break;
+    case ESR_EC_HVC_AARCH64: Message = "HVC executed in AArch64"; break;
+    case ESR_EC_SMC_AARCH64: Message = "SMC executed in AArch64"; break;
+    case ESR_EC_MSR_MRS: Message = "Trapped system register access or instruction"; break;
+
+    case ESR_EC_INST_ABORT_EL_LOWER:
+    case ESR_EC_INST_ABORT_EL_SAME: DescribeInstructionOrDataAbort("Instruction abort", Iss); return;
+    
+    case ESR_EC_PC_MISALIGNED: Message = "PC alignment fault"; break;
+
+    case ESR_EC_DATA_ABORT_EL_LOWER:
+    case ESR_EC_DATA_ABORT_EL_SAME: DescribeInstructionOrDataAbort("Data abort", Iss); return;
+    
+    case ESR_EC_SP_MISALIGNED: Message = "SP alignment fault"; break;
+    case ESR_EC_FP_AARCH32: Message = "FP exception from AArch32"; break;
+    case ESR_EC_FP_AARCH64: Message = "FP exception from AArch64"; break;
+    case ESR_EC_SERROR_INT: Message = "SError interrupt"; break;
+
     default: return;
   }
 
