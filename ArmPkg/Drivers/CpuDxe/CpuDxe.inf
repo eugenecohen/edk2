@@ -54,12 +54,14 @@
   DebugLib
   DefaultExceptionHandlerLib
   DxeServicesTableLib
+  DxeServicesLib
   HobLib
   PeCoffGetEntryPointLib
   UefiDriverEntryPoint
   UefiLib
   ArmExceptionLib
   ArmSmcLib
+  PeCoffLib
 
 [Protocols]
   gEfiCpuArchProtocolGuid
@@ -67,6 +69,7 @@
   gVirtualUncachedPagesProtocolGuid
   gEfiSmmControl2ProtocolGuid
   gEfiSmmConfigurationProtocolGuid
+  gEfiSmmAccess2ProtocolGuid
 
 [Guids]
   gEfiDebugImageInfoTableGuid
@@ -76,6 +79,7 @@
 [Pcd.common]
   gArmTokenSpaceGuid.PcdVFPEnabled
   gArmTokenSpaceGuid.PcdCpuVectorBaseAddress
+  gEfiMdeModulePkgTokenSpaceGuid.PcdLoadModuleAtFixAddressEnable
 
 [FeaturePcd.common]
   gArmTokenSpaceGuid.PcdCpuDxeProduceDebugSupport

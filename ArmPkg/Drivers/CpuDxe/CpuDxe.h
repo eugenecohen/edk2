@@ -31,6 +31,9 @@
 #include <Library/DefaultExceptionHandlerLib.h>
 #include <Library/DebugLib.h>
 #include <Library/ArmSmcLib.h>
+#include <Library/MemoryAllocationLib.h>
+#include <Library/PeCoffLib.h>
+#include <Library/DxeServicesLib.h>
 
 #include <IndustryStandard/ArmStdSmc.h>
 
@@ -42,6 +45,7 @@
 #include <Protocol/LoadedImage.h>
 #include <Protocol/SmmControl2.h>
 #include <Protocol/SmmConfiguration.h>
+#include <Protocol/SmmAccess2.h>
 
 
 #define EFI_MEMORY_CACHETYPE_MASK     (EFI_MEMORY_UC  | \
