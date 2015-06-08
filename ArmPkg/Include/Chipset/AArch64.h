@@ -95,6 +95,51 @@
 #define CNTHCTL_EL2_EL1PCTEN    BIT0
 #define CNTHCTL_EL2_EL1PCEN     BIT1
 
+// Exception Syndrome definitions
+#define ESR_EC_MASK             0xFC000000
+#define ESR_EC_SHIFT            26
+#define ESR_IL_MASK             0x02000000
+#define ESR_IL_SHIFT            25
+#define ESR_ISS_MASK            0x01FFFFFF
+#define ESR_ISS_SHIFT           0
+
+#define ESR_EC_UNKNOWN                  0x00
+#define ESR_EC_WFI_WFE                  0x01
+#define ESR_EC_CP15_MCR_MRC             0x03
+#define ESR_EC_CP15_MCRR_MRRC           0x04
+#define ESR_EC_CP14_MCR_MRC             0x05
+#define ESR_EC_CP14_LDC_STC             0x06
+#define ESR_EC_FP_SIMD_ACCESS           0x07
+#define ESR_EC_CP10_MCR_MRC             0x08
+#define ESR_EC_CP14_MRRC                0x0C
+#define ESR_EC_ILLEGAL_EXECUTION_STATE  0x0E
+#define ESR_EC_SVC_AARCH32              0x11
+#define ESR_EC_HVC_AARCH32              0x12
+#define ESR_EC_SMC_AARCH32              0x13
+#define ESR_EC_SVC_AARCH64              0x15
+#define ESR_EC_HVC_AARCH64              0x16
+#define ESR_EC_SMC_AARCH64              0x17
+#define ESR_EC_MSR_MRS                  0x18
+#define ESR_EC_INST_ABORT_EL_LOWER      0x20
+#define ESR_EC_INST_ABORT_EL_SAME       0x21
+#define ESR_EC_PC_MISALIGNED            0x22
+#define ESR_EC_DATA_ABORT_EL_LOWER      0x24
+#define ESR_EC_DATA_ABORT_EL_SAME       0x25
+#define ESR_EC_SP_MISALIGNED            0x26
+#define ESR_EC_FP_AARCH32               0x28
+#define ESR_EC_FP_AARCH64               0x2C
+#define ESR_EC_SERROR_INT               0x2F
+#define ESR_EC_BKPT_EL_LOWER            0x30
+#define ESR_EC_BKPT_EL_SAME             0x31
+#define ESR_EC_STEP_EL_LOWER            0x32
+#define ESR_EC_STEP_EL_SAME             0x33
+#define ESR_EC_WATCHPT_EL_LOWER         0x34
+#define ESR_EC_WATCHPT_EL_SAME          0x35
+#define ESR_EC_BKPT_INST_AARCH32        0x38
+#define ESR_EC_VECTOR_CATCH_AARCH32     0x3A
+#define ESR_EC_BRK_INST_AARCH64         0x3C
+
+
 #define ARM_VECTOR_TABLE_ALIGNMENT ((1 << 11)-1)
 
 VOID
