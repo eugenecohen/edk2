@@ -43,7 +43,7 @@ DefaultExceptionHandlerConstructor (
   if (EFI_ERROR (Status)) {
     gDebugImageTableHeader = NULL;
   }
-  return Status;
+  return EFI_SUCCESS;
 }
 
 /**

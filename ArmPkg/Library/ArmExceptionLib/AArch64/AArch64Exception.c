@@ -13,15 +13,16 @@
 *
 **/
 
-#include <Library/ArmExceptionLib.h>
+#include <Uefi.h>
+#include <Library/CpuExceptionHandlerLib.h>
 
 #include <Chipset/AArch64.h>
 #include <Library/DebugLib.h>
 
 UINTN gMaxExceptionNumber = MAX_AARCH64_EXCEPTION;
 
-EFI_EXCEPTION_CALLBACK  gExceptionHandlers[MAX_AARCH64_EXCEPTION + 1];
-EFI_EXCEPTION_CALLBACK  gDebuggerExceptionHandlers[MAX_AARCH64_EXCEPTION + 1];
+EFI_EXCEPTION_CALLBACK  gExceptionHandlers[MAX_AARCH64_EXCEPTION + 1] = { 0 };
+EFI_EXCEPTION_CALLBACK  gDebuggerExceptionHandlers[MAX_AARCH64_EXCEPTION + 1] = { 0 };
 
 RETURN_STATUS InstallExceptionHandlers(VOID) {
   // all AArch64 impelmentations have VBAR so this should never get called

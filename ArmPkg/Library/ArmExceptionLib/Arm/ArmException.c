@@ -15,10 +15,8 @@
 *
 **/
 
-#include <Library/ArmExceptionLib.h>
-
-//#include <Uefi.h>
-//#include <Protocol/DebugSupport.h> // for EFI_EXCEPTION_CALLBACK and MAX_AARCH64_EXCEPTION
+#include <Uefi.h>
+#include <Library/CpuExceptionHandlerLib.h>
 
 //FIXME: Will not compile on non-ARMv7 builds
 #include <Chipset/ArmV7.h>
@@ -51,8 +49,8 @@ VOID
 
 UINTN gMaxExceptionNumber = MAX_ARM_EXCEPTION;
 
-EFI_EXCEPTION_CALLBACK  gExceptionHandlers[MAX_ARM_EXCEPTION + 1];
-EFI_EXCEPTION_CALLBACK  gDebuggerExceptionHandlers[MAX_ARM_EXCEPTION + 1];
+EFI_EXCEPTION_CALLBACK  gExceptionHandlers[MAX_ARM_EXCEPTION + 1] = { 0 };
+EFI_EXCEPTION_CALLBACK  gDebuggerExceptionHandlers[MAX_ARM_EXCEPTION + 1] = { 0 };
 
 
 RETURN_STATUS InstallExceptionHandlers(VOID)

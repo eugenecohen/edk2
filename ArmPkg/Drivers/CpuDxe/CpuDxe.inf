@@ -59,7 +59,7 @@
   PeCoffGetEntryPointLib
   UefiDriverEntryPoint
   UefiLib
-  ArmExceptionLib
+  CpuExceptionHandlerLib
   ArmSmcLib
   PeCoffLib
 
@@ -75,6 +75,7 @@
   gEfiDebugImageInfoTableGuid
   gArmMpCoreInfoGuid
   gIdleLoopEventGuid
+  gEfiVectorHandoffTableGuid
 
 [Pcd.common]
   gArmTokenSpaceGuid.PcdVFPEnabled

@@ -18,6 +18,7 @@
 #include <Library/PrintLib.h>
 #include <Library/BaseMemoryLib.h>
 #include <Library/SerialPortLib.h>
+#include <Library/CpuExceptionHandlerLib.h>
 #include <Library/ArmGicLib.h>
 #include <Library/ArmPlatformLib.h>
 
@@ -51,6 +52,9 @@ CEntryPoint (
   if (FixedPcdGet32 (PcdVFPEnabled)) {
     ArmEnableVFP ();
   }
+
+  // Get some basic exception handlers in place
+  InitializeCpuExceptionHandlers(NULL);
 
   // Initialize peripherals that must be done at the early stage
   // Example: Some L2 controller, interconnect, clock, DMC, etc
@@ -197,4 +201,3 @@ NonTrustedWorldTransition (
   // PEI Core should always load and never return
   ASSERT (FALSE);
 }
-

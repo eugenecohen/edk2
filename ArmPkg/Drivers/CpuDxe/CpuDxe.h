@@ -28,7 +28,7 @@
 #include <Library/PeCoffGetEntryPointLib.h>
 #include <Library/UefiLib.h>
 #include <Library/CpuLib.h>
-#include <Library/DefaultExceptionHandlerLib.h>
+#include <Library/CpuExceptionHandlerLib.h>
 #include <Library/DebugLib.h>
 #include <Library/ArmSmcLib.h>
 #include <Library/MemoryAllocationLib.h>
@@ -40,7 +40,6 @@
 #include <Guid/DebugImageInfoTable.h>
 #include <Protocol/Cpu.h>
 #include <Protocol/DebugSupport.h>
-#include <Protocol/DebugSupportPeriodicCallback.h>
 #include <Protocol/VirtualUncachedPages.h>
 #include <Protocol/LoadedImage.h>
 #include <Protocol/SmmControl2.h>

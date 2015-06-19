@@ -14,14 +14,14 @@
 
 [Defines]
   INF_VERSION                    = 0x00010005
-  BASE_NAME                      = ArmExceptionLib
-  FILE_GUID                      = A9796991-4E88-47F0-87C5-D96A1D270539
+  BASE_NAME                      = SecPeiArmExceptionLib
+  FILE_GUID                      = EF0F4EB1-B182-4848-9FE7-C7F605906353
   MODULE_TYPE                    = BASE
   VERSION_STRING                 = 1.0
   LIBRARY_CLASS                  = CpuExceptionHandlerLib
 
 [Sources.common]
-  ArmExceptionLib.c
+  SecPeiArmExceptionLib.c
 
 [Sources.Arm]
   Arm/ArmException.c
@@ -31,7 +31,7 @@
 [Sources.AARCH64]
   AArch64/AArch64Exception.c
   AArch64/ExceptionSupport.S
-  AArch64/NullJumpHook.S
+  AArch64/SecJumpHook.S
 
 [Packages]
   MdePkg/MdePkg.dec
@@ -42,8 +42,6 @@
   ArmLib
   DebugLib
   DefaultExceptionHandlerLib
-  BaseMemoryLib
-  CacheMaintenanceLib
 
 [Pcd]
   gArmTokenSpaceGuid.PcdRelocateVectorTable

@@ -14,15 +14,27 @@
 **/
 
 #include "CpuDxe.h"
-#include <Library/ArmExceptionLib.h>
+#include <Library/CpuExceptionHandlerLib.h>
+#include <Guid/VectorHandoffTable.h>
 
 EFI_STATUS
 InitializeExceptions (
   IN EFI_CPU_ARCH_PROTOCOL    *Cpu
   ) {
   EFI_STATUS           Status;
-  BOOLEAN              IrqEnabled;
-  BOOLEAN              FiqEnabled;
+  EFI_VECTOR_HANDOFF_INFO         *VectorInfoList;
+  EFI_VECTOR_HANDOFF_INFO         *VectorInfo;
+  BOOLEAN                         IrqEnabled;
+  BOOLEAN                         FiqEnabled;
+
+  VectorInfo = (EFI_VECTOR_HANDOFF_INFO *)NULL;
+  Status = EfiGetSystemConfigurationTable(&gEfiVectorHandoffTableGuid, (VOID **)&VectorInfoList);
+  if (Status == EFI_SUCCESS && VectorInfoList != NULL) {
+    VectorInfo = VectorInfoList;
+  }
+
+  // intialize the CpuExceptionHandlerLib so we take over the excetion vector table from the DXE Core
+  InitializeCpuExceptionHandlers(VectorInfo);
 
   Status = EFI_SUCCESS;
 
@@ -75,9 +87,9 @@ previously installed.
 **/
 EFI_STATUS
 RegisterInterruptHandler(
-IN EFI_EXCEPTION_TYPE             InterruptType,
-IN EFI_CPU_INTERRUPT_HANDLER      InterruptHandler
-) {
-  // pass down to ExceptionLib
-  return (EFI_STATUS)RegisterExceptionHandler(InterruptType, InterruptHandler);
+  IN EFI_EXCEPTION_TYPE             InterruptType,
+  IN EFI_CPU_INTERRUPT_HANDLER      InterruptHandler
+  ) {
+  // pass down to CpuExceptionHandlerLib
+  return (EFI_STATUS)RegisterCpuInterruptHandler(InterruptType, InterruptHandler);
 }

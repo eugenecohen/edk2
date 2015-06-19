@@ -20,11 +20,8 @@
 
 #include <Library/ArmLib.h>
 #include <Library/BaseLib.h>
-#include <Library/BaseMemoryLib.h>
 #include <Library/DebugLib.h>
 #include <Library/DefaultExceptionHandlerLib.h>
-
-RETURN_STATUS InstallExceptionHandlers(VOID);
 
 VOID
 ExceptionHandlersStart(
@@ -33,8 +30,6 @@ ExceptionHandlersStart(
 
 // these globals are provided by the architecture specific source (Arm or AArch64)
 extern UINTN                    gMaxExceptionNumber;
-extern EFI_EXCEPTION_CALLBACK   gExceptionHandlers[];
-extern EFI_EXCEPTION_CALLBACK   gDebuggerExceptionHandlers[];
 
 
 /**
@@ -59,23 +54,13 @@ InitializeCpuExceptionHandlers(
   IN EFI_VECTOR_HANDOFF_INFO       *VectorInfo OPTIONAL
   )
 {
-  // if the processor does not implement VBAR then we must copy exception handlers
-  // to the fixed vector address instead
-  if (FeaturePcdGet(PcdRelocateVectorTable) == TRUE) {
+  // The AArch64 Vector table must be 2k-byte aligned - if this assertion fails ensure 'Align=4K'
+  // is defined into your FDF for this module.
+  ASSERT(((UINTN)ExceptionHandlersStart & ARM_VECTOR_TABLE_ALIGNMENT) == 0);
 
-    return InstallExceptionHandlers();
-
-  }
-  else { // use VBAR to point to where our exception handlers are
-
-    // The AArch64 Vector table must be 2k-byte aligned - if this assertion fails ensure 'Align=4K'
-    // is defined into your FDF for this module.
-    ASSERT(((UINTN)ExceptionHandlersStart & ARM_VECTOR_TABLE_ALIGNMENT) == 0);
-
-    // We do not copy the Exception Table at PcdGet32(PcdCpuVectorBaseAddress). We just set Vector
-    // Base Address to point into CpuDxe code.
-    ArmWriteVBar((UINTN)ExceptionHandlersStart);
-  }
+  // We do not copy the Exception Table at PcdGet32(PcdCpuVectorBaseAddress). We just set Vector
+  // Base Address to point into CpuDxe code.
+  ArmWriteVBar((UINTN)ExceptionHandlersStart);
 
   return RETURN_SUCCESS;
 }
@@ -102,7 +87,7 @@ InitializeCpuInterruptHandlers(
 IN EFI_VECTOR_HANDOFF_INFO       *VectorInfo OPTIONAL
 )
 {
-  // not needed, this is what the CPU driver is for
+  // not needed in SEC/PEI
   return EFI_UNSUPPORTED;
 }
 
@@ -136,17 +121,8 @@ RegisterCpuInterruptHandler(
   IN EFI_EXCEPTION_TYPE             ExceptionType,
   IN EFI_CPU_INTERRUPT_HANDLER      ExceptionHandler
   ) {
-  if (ExceptionType > gMaxExceptionNumber) {
-    return RETURN_UNSUPPORTED;
-  }
-
-  if ((ExceptionHandler != NULL) && (gExceptionHandlers[ExceptionType] != NULL)) {
-    return RETURN_ALREADY_STARTED;
-  }
-
-  gExceptionHandlers[ExceptionType] = ExceptionHandler;
-
-  return RETURN_SUCCESS;
+  // not supported in SEC/PEI
+  return EFI_UNSUPPORTED;
 }
 
 VOID
@@ -156,13 +132,7 @@ CommonCExceptionHandler(
   IN OUT EFI_SYSTEM_CONTEXT           SystemContext
   )
 {
-  if (ExceptionType <= gMaxExceptionNumber) {
-    if (gExceptionHandlers[ExceptionType]) {
-      gExceptionHandlers[ExceptionType](ExceptionType, SystemContext);
-      return;
-    }
-  }
-  else {
+  if (ExceptionType > gMaxExceptionNumber) {
     DEBUG((EFI_D_ERROR, "Unknown exception type %d\n", ExceptionType));
     ASSERT(FALSE);
   }
