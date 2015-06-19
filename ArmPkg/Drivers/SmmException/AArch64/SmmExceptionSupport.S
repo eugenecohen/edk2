@@ -37,7 +37,7 @@ ASM_PFX(SmmCoreEntryPoint):
 // EL3 Exception Handler Initialization
 // Arguments:
 // X0: SMC funciton identifier for Run Image
-// X1: This function's adress'
+// X1: This function's address
 // X2: EL3 Stack Pointer
 // X3: SMM Core Entry Point
 //
@@ -51,7 +51,7 @@ ASM_PFX(_ModuleEntryPoint):
   adr       x1, ASM_PFX(SmmCoreEntryPoint)
   str       x3, [x1]
 
-// register the custom Synchronous Exception Handler
+// register the custom Synchronous Exception Handler (changes x1 and x2, this is okay)
   adr       x1, gExceptionHandlers
   add       x1, x1, #0 // #define EXCEPT_AARCH64_SYNCHRONOUS_EXCEPTIONS    0
   adr       x2, ASM_PFX(SyncExceptionHandler)

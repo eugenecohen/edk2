@@ -148,19 +148,11 @@ DoSecureConfig (
   mSmramReservedRegions[1].SmramReservedSize = EFI_PAGE_SIZE;
   mSmramReservedRegions[1].SmramReservedStart = mSmramReservedRegions[0].SmramReservedStart - mSmramReservedRegions[1].SmramReservedSize;
   mSecureStackPointer = mSmramReservedRegions[1].SmramReservedStart + mSmramReservedRegions[1].SmramReservedSize - 0x10;
+  DEBUG((EFI_D_INFO, "ARM secure stack pointer is 0x%lx\n", mSecureStackPointer));
 
   // append the reserved SMRAM range temrinator
   mSmramReservedRegions[2].SmramReservedStart = 0;
   mSmramReservedRegions[2].SmramReservedSize = 0;
-
-
-
-
-  // todo: update exception handlers in ExceptionSupport.S to handle EL3 properly
-
-
-
-
 
   Status = gBS->InstallMultipleProtocolInterfaces(
     &mSmmConfigHandle,
@@ -200,6 +192,7 @@ EFI_STATUS StartSmmCore(VOID)
   RunImageArgs.Arg2 = mSecureStackPointer;
   RunImageArgs.Arg3 = (UINTN)RegisteredEntryPoint;
 
+  DEBUG((EFI_D_INFO, "Invoking SMC RUN_IMAGE for entry at 0x%lx\n", mExceptionHandlerEntryPoint));
   ArmCallSmc(&RunImageArgs);
 
   // null out the entry point since it's been started

@@ -31,12 +31,13 @@
 [Packages]
   ArmPkg/ArmPkg.dec
   MdePkg/MdePkg.dec
+  MdeModulePkg/MdeModulePkg.dec
 
 [LibraryClasses]
   ArmLib
   BaseMemoryLib
   DebugLib
-  ArmExceptionLib
+  CpuExceptionHandlerLib
 
 # This module will be loaded by CPU DXE as part of SMM preparation so we don't want
 # the SMM dispatcher to touch it.

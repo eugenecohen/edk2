@@ -64,20 +64,22 @@ SmmActivate (
 
   if (Periodic) return EFI_UNSUPPORTED;
 
-  // if we haven't called the smm core entry point, do that first
+  // start the SMM enviornment for the first time
   if (!mSmmCoreStarted) {
     
     Status = StartSmmCore();
     if (EFI_ERROR(Status)) return Status;
 
     mSmmCoreStarted = TRUE;
+
+  } else {
+
+    // generate a Secure Monitor Call to signal a software SMI to the PI SMM environment
+    ZeroMem(&SwSmiArgs, sizeof(SwSmiArgs));
+    SwSmiArgs.Arg0 = ARM_SMC_ID_SW_SMI;
+
+    ArmCallSmc(&SwSmiArgs);
   }
-
-  // generate a Secure Monitor Call to signal a software SMI to the PI SMM environment
-  ZeroMem(&SwSmiArgs, sizeof(SwSmiArgs));
-  SwSmiArgs.Arg0 = ARM_SMC_ID_SW_SMI;
-
-  ArmCallSmc(&SwSmiArgs);
 
   return (SwSmiArgs.Arg0 == 0) ? EFI_SUCCESS : EFI_DEVICE_ERROR;
 }
