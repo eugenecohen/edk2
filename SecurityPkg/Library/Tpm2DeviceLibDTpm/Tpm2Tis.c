@@ -17,7 +17,7 @@ WITHOUT WARRANTIES OR REPRESENTATIONS OF ANY KIND, EITHER EXPRESS OR IMPLIED.
 
 #include <Library/BaseLib.h>
 #include <Library/BaseMemoryLib.h>
-#include <Library/IoLib.h>
+#include <Library/TpmIoLib.h>
 #include <Library/TimerLib.h>
 #include <Library/DebugLib.h>
 #include <Library/Tpm2DeviceLib.h>
@@ -47,7 +47,7 @@ TisPcPresenceCheck (
 {
   UINT8                             RegRead;
 
-  RegRead = MmioRead8 ((UINTN)&TisReg->Access);
+  RegRead = TpmRead8 ((UINTN)&TisReg->Access);
   return (BOOLEAN)(RegRead != (UINT8)-1);
 }
 
@@ -74,7 +74,7 @@ TisPcWaitRegisterBits (
   UINT32                            WaitTime;
 
   for (WaitTime = 0; WaitTime < TimeOut; WaitTime += 30){
-    RegRead = MmioRead8 ((UINTN)Register);
+    RegRead = TpmRead8 ((UINTN)Register);
     if ((RegRead & BitSet) == BitSet && (RegRead & BitClear) == 0)
       return EFI_SUCCESS;
     MicroSecondDelay (30);
@@ -111,10 +111,10 @@ TisPcReadBurstCount (
   do {
     //
     // TIS_PC_REGISTERS_PTR->burstCount is UINT16, but it is not 2bytes aligned,
-    // so it needs to use MmioRead8 to read two times
+    // so it needs to use TpmRead8 to read two times
     //
-    DataByte0   = MmioRead8 ((UINTN)&TisReg->BurstCount);
-    DataByte1   = MmioRead8 ((UINTN)&TisReg->BurstCount + 1);
+    DataByte0   = TpmRead8 ((UINTN)&TisReg->BurstCount);
+    DataByte1   = TpmRead8 ((UINTN)&TisReg->BurstCount + 1);
     *BurstCount = (UINT16)((DataByte1 << 8) + DataByte0);
     if (*BurstCount != 0) {
       return EFI_SUCCESS;
@@ -147,7 +147,7 @@ TisPcPrepareCommand (
     return EFI_INVALID_PARAMETER;
   }
 
-  MmioWrite8((UINTN)&TisReg->Status, TIS_PC_STS_READY);
+  TpmWrite8((UINTN)&TisReg->Status, TIS_PC_STS_READY);
   Status = TisPcWaitRegisterBits (
              &TisReg->Status,
              TIS_PC_STS_READY,
@@ -183,7 +183,7 @@ TisPcRequestUseTpm (
     return EFI_NOT_FOUND;
   }
 
-  MmioWrite8((UINTN)&TisReg->Access, TIS_PC_ACC_RQUUSE);
+  TpmWrite8((UINTN)&TisReg->Access, TIS_PC_ACC_RQUUSE);
   Status = TisPcWaitRegisterBits (
              &TisReg->Access,
              (UINT8)(TIS_PC_ACC_ACTIVE |TIS_PC_VALID),
@@ -262,7 +262,7 @@ Tpm2TisTpmCommand (
       goto Exit;
     }
     for (; BurstCount > 0 && Index < SizeIn; BurstCount--) {
-      MmioWrite8((UINTN)&TisReg->DataFifo, *(BufferIn + Index));
+      TpmWrite8((UINTN)&TisReg->DataFifo, *(BufferIn + Index));
       Index++;
     }
   }
@@ -283,7 +283,7 @@ Tpm2TisTpmCommand (
   //
   // Executed the TPM command and waiting for the response data ready
   //
-  MmioWrite8((UINTN)&TisReg->Status, TIS_PC_STS_GO);
+  TpmWrite8((UINTN)&TisReg->Status, TIS_PC_STS_GO);
 
   //
   // NOTE: That may take many seconds to minutes for certain commands, such as key generation.
@@ -301,7 +301,7 @@ Tpm2TisTpmCommand (
     //
     DEBUG ((DEBUG_ERROR, "Wait for Tpm2 response data time out. Trying to cancel the command!!\n"));
 
-    MmioWrite32((UINTN)&TisReg->Status, TIS_PC_STS_CANCEL);
+    TpmWrite32((UINTN)&TisReg->Status, TIS_PC_STS_CANCEL);
     Status = TisPcWaitRegisterBits (
                &TisReg->Status,
                (UINT8) (TIS_PC_VALID | TIS_PC_STS_DATA),
@@ -333,7 +333,7 @@ Tpm2TisTpmCommand (
       goto Exit;
     }
     for (; BurstCount > 0; BurstCount--) {
-      *(BufferOut + Index) = MmioRead8 ((UINTN)&TisReg->DataFifo);
+      *(BufferOut + Index) = TpmRead8 ((UINTN)&TisReg->DataFifo);
       Index++;
       if (Index == sizeof (TPM2_RESPONSE_HEADER)) break;
     }
@@ -368,7 +368,7 @@ Tpm2TisTpmCommand (
   //
   while ( Index < TpmOutSize ) {
     for (; BurstCount > 0; BurstCount--) {
-      *(BufferOut + Index) = MmioRead8 ((UINTN)&TisReg->DataFifo);
+      *(BufferOut + Index) = TpmRead8 ((UINTN)&TisReg->DataFifo);
       Index++;
       if (Index == TpmOutSize) {
         Status = EFI_SUCCESS;
@@ -389,7 +389,7 @@ Exit:
     }
     DEBUG ((EFI_D_VERBOSE, "\n"));
   );
-  MmioWrite8((UINTN)&TisReg->Status, TIS_PC_STS_READY);
+  TpmWrite8((UINTN)&TisReg->Status, TIS_PC_STS_READY);
   return Status;
 }
 

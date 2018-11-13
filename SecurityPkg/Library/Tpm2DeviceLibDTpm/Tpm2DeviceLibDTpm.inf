@@ -47,7 +47,7 @@
 [LibraryClasses]
   BaseLib
   BaseMemoryLib
-  IoLib
+  TpmIoLib
   TimerLib
   DebugLib
   PcdLib
