@@ -1,0 +1,41 @@
+## @file
+#  Provides BaseCrypto SHA1 hash service
+#
+#  This library is to abstract TPM2 register accesses so that a common
+#  interface can be used for multiple underlying busses such as TPM,
+#  SPI, or I2C access.
+#
+# Copyright (c) 2018 HP Development Company, L.P.
+# This program and the accompanying materials
+# are licensed and made available under the terms and conditions of the BSD License
+# which accompanies this distribution. The full text of the license may be found at
+# http://opensource.org/licenses/bsd-license.php
+# THE PROGRAM IS DISTRIBUTED UNDER THE BSD LICENSE ON AN "AS IS" BASIS,
+# WITHOUT WARRANTIES OR REPRESENTATIONS OF ANY KIND, EITHER EXPRESS OR IMPLIED.
+#
+##
+
+[Defines]
+  INF_VERSION                    = 0x00010005
+  BASE_NAME                      = TpmIoLibMmio
+  FILE_GUID                      = B51DE0C6-8A48-4AF9-BF88-5A46CC853FC8
+  MODULE_TYPE                    = BASE
+  VERSION_STRING                 = 1.0
+  LIBRARY_CLASS                  = NULL
+
+#
+# The following information is for reference only and not required by the build tools.
+#
+#  VALID_ARCHITECTURES           = IA32 X64 ARM AARCH64
+#
+
+[Sources]
+  TpmIoLibMmio.c
+
+[Packages]
+  MdePkg/MdePkg.dec
+  SecurityPkg/SecurityPkg.dec
+
+[LibraryClasses]
+  BaseLib
+  IoLib
